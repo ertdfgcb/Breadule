@@ -11,5 +11,4 @@
 (def default-db
 {:name "Breadule"
  :isRunning false
- :currentSchedule testSchedule
  :schedules {:testId testSchedule}})

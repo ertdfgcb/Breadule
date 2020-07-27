@@ -1,6 +1,7 @@
 (ns breadule.subs
   (:require
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [breadule.util :as util]))
 
 (re-frame/reg-sub
  ::name
@@ -15,6 +16,5 @@
 (re-frame/reg-sub
  ::stage-field 
  (fn [db [_ scheduleId stageNum field]]
-   (let [schedule (get (:schedules db) scheduleId)
-         stage (nth (schedule :stages) stageNum)]
+   (let [stage (util/get-stage db scheduleId stageNum)]
      (get stage field))))
