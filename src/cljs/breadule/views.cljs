@@ -58,18 +58,27 @@
        :label "Remove"
        :on-click #(re-frame/dispatch [::events/remove-stage scheduleId num])]]]))
 
-
-(defn schedule-view [[scheduleId schedule]]
-  ^{:key (gensym)}
+(defn schedule-edit-view [scheduleId schedule]
   [:div
-   [:h3 (schedule :name)]
-   [:h4 "Stages"]
    (doall (map-indexed #(stage-view scheduleId %1 %2) (:stages schedule)))
    [button
     :label "Add"
     :on-click #(re-frame/dispatch
                 [::events/add-stage scheduleId])]])
 
+(defn schedule-view [[scheduleId schedule]]
+  (let [running (re-frame/subscribe [::subs/running])]
+    ^{:key (gensym)}
+    [:div
+     [:h3 (schedule :name)]
+     [:h4 "Stages"]
+     (if @running
+       [:h2 "running"]
+       (schedule-edit-view scheduleId schedule))
+     [button
+      :label (if @running "Stop" "Start")
+      :on-click #(re-frame/dispatch
+                  [::events/toggle-running])]]))
 
 (defn main-panel []
   (let [name (re-frame/subscribe [::subs/name])

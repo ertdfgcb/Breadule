@@ -17,7 +17,6 @@
 (re-frame/reg-event-db
  ::update-stage
  (fn [db [_ scheduleId stageNum field value]]
-   (print db)
    (util/update-stage-field db scheduleId stageNum field value)))
 
 (re-frame/reg-event-db
@@ -25,3 +24,8 @@
  (fn [db [_ scheduleId stageNum]]
    (let [drop-idx #(into [] (concat (subvec %1 0 %2) (subvec %1 (inc %2))))]
      (update-in db [:schedules scheduleId :stages] drop-idx stageNum))))
+
+(re-frame/reg-event-db
+ ::toggle-running
+ (fn [db [_]]
+   (update db :running not)))
