@@ -35,6 +35,6 @@
      (get stage field))))
 
 (re-frame/reg-sub
- ::running
- (fn [db]
-   (:running db)))
+ ::db-field
+ (fn [db [_ field]]
+   (get db field)))

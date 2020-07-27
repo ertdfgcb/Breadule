@@ -20,7 +20,7 @@
    :notes "hardcoded test schedule"
    :stages [{:editing false
              :name "Turn set 1"
-             :waitTime 030
+             :waitTime 1
              :workTime 005
              :instructions "Stretch n' fold"
              :notes ""}]})
@@ -28,5 +28,9 @@
 (def default-db
 {:name "Breadule"
  :running false
+ :paused false
+ :timer 0
+ :currentStage 0
+ :phase ""
  :currentSchedule nil
  :schedules {:testId testSchedule}})

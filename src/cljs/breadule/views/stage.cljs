@@ -68,4 +68,3 @@
     :label "Add"
     :on-click #(re-frame/dispatch
                 [::events/add-stage scheduleId])]])
-

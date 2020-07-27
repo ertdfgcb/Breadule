@@ -42,6 +42,6 @@
    (assoc db :currentSchedule scheduleId)))
 
 (re-frame/reg-event-db
- ::toggle-running
- (fn [db [_]]
-   (update db :running not)))
+ ::update-db
+ (fn [db [_ field value]]
+   (assoc db field value)))
