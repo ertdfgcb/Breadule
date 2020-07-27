@@ -1,7 +1,7 @@
 (ns breadule.views
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [input-text input-textarea label input-time button]]
+   [re-com.core   :refer [p h-box gap v-box input-text input-textarea label input-time button]]
    [breadule.subs :as subs]
    [breadule.events :as events]))
 
@@ -14,39 +14,42 @@
         name (fieldSub :name)
         waitTime (fieldSub :waitTime)
         workTime (fieldSub :workTime)
-        instructions (fieldSub :instructions)]
+        instructions (fieldSub :instructions)
+        labeled (fn [l t] [:div [label :label l] t])]
     [:div
-     [label :label "Name"]
-     [input-text
-      :model name
-      :on-change #(fieldUpdate :name %)]
-     [label :label "Wait Time"]
-     [input-time
-      :model waitTime
-      :on-change #(fieldUpdate :waitTime %)]
-     [label :label "Work Time"]
-     [input-time
-      :model workTime
-      :on-change #(fieldUpdate :workTime %)]
-     [label :label "Instructions"]
-     [input-textarea
-      :model instructions
-      :change-on-blur? false
-      :on-change #(fieldUpdate :instructions %)]]))
+     (labeled "Name"
+              [input-text
+               :model name
+               :on-change #(fieldUpdate :name %)])
+     (labeled "Wait Time"
+              [input-time
+               :model waitTime
+               :on-change #(fieldUpdate :waitTime %)])
+     (labeled "Work Time"
+              [input-time
+               :model workTime
+               :on-change #(fieldUpdate :workTime %)])
+     (labeled "Instructions"
+              [input-textarea
+               :model instructions
+               :change-on-blur? false
+               :on-change #(fieldUpdate :instructions %)])]))
 
 (defn stage-view [scheduleId num stage]
   (let [editing (stage-field-sub scheduleId num :editing)
         edit-toggle #(re-frame/dispatch
-                      [::events/update-stage scheduleId num :editing (not @editing)])]
+                      [::events/update-stage scheduleId num :editing (not @editing)])
+        row (fn [l t] [:tr [:td l] [:td t]])]
     ^{:key (gensym)}
     [:div
-     (if  @editing
+     (if @editing
        (stage-form scheduleId num)
-       [:div
-        [label :label (stage :name)]
-        [label :label (stage :waitTime)]
-        [label :label (stage :workTime)]
-        [label :label (stage :instructions)]])
+       [:table
+        [:tbody
+         (row "Name" (:name stage))
+         (row "Wait Time" (:waitTime stage))
+         (row "Work Time" (:workTime stage))
+         (row "Instructions" (:instructions stage))]])
      [:div
       [button
        :label (if @editing "Finish" "Edit")
