@@ -8,17 +8,20 @@
 (defn stage-field-sub [id num name]
   (re-frame/subscribe [::subs/stage-field id num name]))
 
+(defn labeled [l t]
+  [:div [label :label l] t])
+
 (defn stage-form [scheduleId num]
   (let [fieldSub #(stage-field-sub scheduleId num %)
         fieldUpdate #(re-frame/dispatch [::events/update-stage scheduleId num %1 %2])
         name (fieldSub :name)
         waitTime (fieldSub :waitTime)
         workTime (fieldSub :workTime)
-        instructions (fieldSub :instructions)
-        labeled (fn [l t] [:div [label :label l] t])]
+        instructions (fieldSub :instructions)]
     [:div
      (labeled "Name"
               [input-text
+               :change-on-blur? false
                :model name
                :on-change #(fieldUpdate :name %)])
      (labeled "Wait Time"
@@ -58,7 +61,7 @@
        :label "Remove"
        :on-click #(re-frame/dispatch [::events/remove-stage scheduleId num])]]]))
 
-(defn schedule-edit-view [scheduleId schedule]
+(defn stages-edit-view [scheduleId schedule]
   [:div
    (doall (map-indexed #(stage-view scheduleId %1 %2) (:stages schedule)))
    [button
@@ -66,15 +69,36 @@
     :on-click #(re-frame/dispatch
                 [::events/add-stage scheduleId])]])
 
+(defn schedule-edit-view [scheduleId]
+  (let [name (re-frame/subscribe [::subs/schedule-field scheduleId :name])
+        notes (re-frame/subscribe [::subs/schedule-field scheduleId :notes])]
+    [:div
+     [labeled "Name"
+      [input-text
+       :change-on-blur? false
+       :model name
+       :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :name %])]]
+     [labeled "Notes"
+      [input-textarea
+       :change-on-blur? false
+       :model notes
+       :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :notes %])]]]))
+
 (defn schedule-view [scheduleId schedule]
   (let [running (re-frame/subscribe [::subs/running])]
-    ^{:key (gensym)}
     [:div
-     [:h3 (schedule :name)]
+     (if (:editing schedule)
+       (schedule-edit-view scheduleId)
+       [:div [:h3 (:name schedule)]
+        [:p (:notes schedule)]])
+     [button
+      :label (if (:editing schedule) "Finish" "Edit")
+      :on-click #(re-frame/dispatch
+                  [::events/update-schedule scheduleId :editing (not (:editing schedule))])]
      [:h4 "Stages"]
      (if @running
        [:h2 "running"]
-       (schedule-edit-view scheduleId schedule))
+       (stages-edit-view scheduleId schedule))
      [button
       :label (if @running "Stop" "Start")
       :on-click #(re-frame/dispatch
@@ -92,5 +116,8 @@
       :model currentSchedule
       :placeholder "Select schedule"
       :on-change #(re-frame/dispatch [::events/select-schedule %])]
+     [button
+      :label "Add"
+      :on-click #(re-frame/dispatch [::events/add-schedule (gensym)])]
      (when (not= @currentSchedule nil)
        (schedule-view @currentSchedule (get @schedules @currentSchedule)))]))

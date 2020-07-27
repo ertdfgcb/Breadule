@@ -24,6 +24,11 @@
    (:currentSchedule db)))
 
 (re-frame/reg-sub
+ ::schedule-field
+ (fn [db [_ scheduleId field]]
+   (get-in db [:schedules scheduleId field])))
+
+(re-frame/reg-sub
  ::stage-field 
  (fn [db [_ scheduleId stageNum field]]
    (let [stage (util/get-stage db scheduleId stageNum)]

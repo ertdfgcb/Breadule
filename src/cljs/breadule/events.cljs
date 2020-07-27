@@ -26,6 +26,17 @@
      (update-in db [:schedules scheduleId :stages] drop-idx stageNum))))
 
 (re-frame/reg-event-db
+ ::add-schedule
+ (fn [db [_ scheduleId]]
+   (let [selected (assoc db :currentSchedule scheduleId)]
+   (update selected :schedules #(assoc % scheduleId breadule.db/new-schedule)))))
+
+(re-frame/reg-event-db
+ ::update-schedule
+ (fn [db [_ scheduleId field value]]
+   (assoc-in db [:schedules scheduleId field] value)))
+
+(re-frame/reg-event-db
  ::select-schedule
  (fn [db [_ scheduleId]]
    (assoc db :currentSchedule scheduleId)))

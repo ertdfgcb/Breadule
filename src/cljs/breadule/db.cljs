@@ -8,8 +8,16 @@
    :instructions ""
    :notes ""})
 
+(def new-schedule
+  {:editing true
+   :name ""
+   :notes ""
+   :stages []})
+
 (def testSchedule
-  {:name "Test Schedule"
+  {:editing false
+   :name "Test Schedule"
+   :notes "hardcoded test schedule"
    :stages [{:editing false
              :name "Turn set 1"
              :waitTime 030
