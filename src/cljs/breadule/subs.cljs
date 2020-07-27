@@ -21,7 +21,7 @@
 (re-frame/reg-sub
  ::currentSchedule
  (fn [db]
-   (::currentSchedule db)))
+   (:currentSchedule db)))
 
 (re-frame/reg-sub
  ::stage-field 

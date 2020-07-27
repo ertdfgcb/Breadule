@@ -26,6 +26,11 @@
      (update-in db [:schedules scheduleId :stages] drop-idx stageNum))))
 
 (re-frame/reg-event-db
+ ::select-schedule
+ (fn [db [_ scheduleId]]
+   (assoc db :currentSchedule scheduleId)))
+
+(re-frame/reg-event-db
  ::toggle-running
  (fn [db [_]]
    (update db :running not)))

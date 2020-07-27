@@ -1,7 +1,7 @@
 (ns breadule.views
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [p h-box gap v-box input-text input-textarea label input-time button]]
+   [re-com.core   :refer [single-dropdown input-text input-textarea label input-time button]]
    [breadule.subs :as subs]
    [breadule.events :as events]))
 
@@ -66,7 +66,7 @@
     :on-click #(re-frame/dispatch
                 [::events/add-stage scheduleId])]])
 
-(defn schedule-view [[scheduleId schedule]]
+(defn schedule-view [scheduleId schedule]
   (let [running (re-frame/subscribe [::subs/running])]
     ^{:key (gensym)}
     [:div
@@ -82,7 +82,15 @@
 
 (defn main-panel []
   (let [name (re-frame/subscribe [::subs/name])
-        schedules (re-frame/subscribe [::subs/schedules])]
+        schedules (re-frame/subscribe [::subs/schedules])
+        currentSchedule (re-frame/subscribe [::subs/currentSchedule])
+        make-choice (fn [[scheduleId schedule]] {:id scheduleId :label (:name schedule)})]
     [:div
      [:h1 @name]
-     (doall (map schedule-view (seq @schedules)))]))
+     [single-dropdown
+      :choices (map make-choice (seq @schedules))
+      :model currentSchedule
+      :placeholder "Select schedule"
+      :on-change #(re-frame/dispatch [::events/select-schedule %])]
+     (when (not= @currentSchedule nil)
+       (schedule-view @currentSchedule (get @schedules @currentSchedule)))]))
