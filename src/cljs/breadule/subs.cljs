@@ -9,6 +9,11 @@
    (:name db)))
 
 (re-frame/reg-sub
+ ::schedules
+ (fn [db]
+   (:schedules db)))
+
+(re-frame/reg-sub
  ::schedule
  (fn [db [_ id]]
    (get (:schedules db) id)))

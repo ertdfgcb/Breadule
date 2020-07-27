@@ -9,7 +9,11 @@
  (fn [_ _]
    breadule.db/default-db))
 
-;TODO: add event for stage updating and event for stage adding
+(re-frame/reg-event-db
+ ::add-stage
+ (fn [db [_ scheduleId]]
+   (update-in db [:schedules scheduleId :stages] conj breadule.db/new-stage)))
+
 (re-frame/reg-event-db
  ::update-stage
  (fn [db [_ scheduleId stageNum field value]]
@@ -19,4 +23,4 @@
  ::remove-stage
  (fn [db [_ scheduleId stageNum]]
    (let [drop-idx #(concat (subvec %1 0 %2) (subvec %1 (inc %2)))]
-     (print (update-in db [:schedules scheduleId :stages] drop-idx stageNum)))))
+     (update-in db [:schedules scheduleId :stages] drop-idx stageNum))))
