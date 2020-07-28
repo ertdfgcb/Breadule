@@ -13,7 +13,9 @@
                  [ring "1.8.1"]
                  [ring/ring-defaults "0.3.2"]
                  [com.novemberain/monger "3.1.0"]
-                 [ring-json-response "0.2.0"]]
+                 [ring-json-response "0.2.0"]
+                 [cljs-bach "0.3.0"]
+                 [day8.re-frame/http-fx "0.2.1"]]
 
   :plugins [[lein-shadow "0.2.0"]
             

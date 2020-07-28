@@ -25,18 +25,25 @@
        :model notes
        :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :notes %])]]]))
 
+(defn schedule-edit-button [schedule scheduleId]
+  (let [update-event [::events/update-schedule scheduleId :editing (not (:editing schedule))]
+        onclick (fn []
+                  (re-frame/dispatch update-event)
+                  (re-frame/dispatch [::events/post-schedule schedule]))]
+  [button
+   :label (if (:editing schedule) "Finish" "Edit")
+   :on-click onclick]))
+
 (defn schedule-view [scheduleId schedule]
   (let [running (re-frame/subscribe [::subs/db-field :running])
         stageNum (re-frame/subscribe [::subs/db-field :currentStage])]
     [:div
      (if (:editing schedule)
        (schedule-edit-view scheduleId)
-       [:div [:h3 (:name schedule)]
+       [:div
+        [:h3 (:name schedule)]
         [:p (:notes schedule)]])
-     [button
-      :label (if (:editing schedule) "Finish" "Edit")
-      :on-click #(re-frame/dispatch
-                  [::events/update-schedule scheduleId :editing (not (:editing schedule))])]
+     (schedule-edit-button schedule scheduleId)
      [:h4 "Stages"]
      (when @running
        (timer-view scheduleId))

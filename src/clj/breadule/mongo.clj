@@ -9,7 +9,9 @@
         obj (if (contains? schedule :_id)
               schedule
               (assoc schedule :_id (ObjectId.)))]
-    (mc/insert db "schedules" obj)))
+(.println *err* (str schedule))
+    (mc/insert db "schedules" obj)
+    obj))
 
 (defn get-all-schedules []
   (let [connection (mg/connect)

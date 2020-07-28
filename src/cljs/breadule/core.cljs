@@ -5,7 +5,7 @@
    [breadule.events :as events]
    [breadule.views :as views]
    [breadule.config :as config]
-   ))
+   [day8.re-frame.http-fx]))
 
 
 (defn dev-setup []
