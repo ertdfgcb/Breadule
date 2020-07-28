@@ -1,7 +1,7 @@
 (ns breadule.views
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [single-dropdown button]]
+   [re-com.core   :refer [h-box title single-dropdown md-icon-button]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [breadule.views.schedule :refer [schedule-view]]))
@@ -12,14 +12,17 @@
         currentSchedule (re-frame/subscribe [::subs/currentSchedule])
         make-choice (fn [[scheduleId schedule]] {:id scheduleId :label (:name schedule)})]
     [:div
-     [:h1 @name]
-     [single-dropdown
-      :choices (map make-choice (seq @schedules))
-      :model currentSchedule
-      :placeholder "Select schedule"
-      :on-change #(re-frame/dispatch [::events/select-schedule %])]
-     [button
-      :label "Add"
-      :on-click #(re-frame/dispatch [::events/add-schedule (gensym)])]
+     [title :level :level1 :label @name]
+     [h-box
+      :children [[single-dropdown
+                  :choices (map make-choice (seq @schedules))
+                  :model currentSchedule
+                  :placeholder "Select schedule"
+                  :on-change #(re-frame/dispatch [::events/select-schedule %])]
+                 [md-icon-button
+                  :size :larger
+                  :md-icon-name "zmdi-plus"
+                  :class "dropdown-add-button"
+                  :on-click #(re-frame/dispatch [::events/add-schedule (gensym)])]]]
      (when (not= @currentSchedule nil)
        (schedule-view @currentSchedule (get @schedules @currentSchedule)))]))

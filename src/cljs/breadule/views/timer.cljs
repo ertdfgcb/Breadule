@@ -3,7 +3,7 @@
    [goog.string :as gstring]
    [goog.string.format]
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [button v-box p]]
+   [re-com.core   :refer [button title v-box p]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [cljs-bach.synthesis :as b]))
@@ -73,10 +73,10 @@
         instructions (stageField :instructions)
         timer (re-frame/subscribe [::subs/db-field :timer])]
   [v-box
-   :children [[p @name]
-              [p @instructions]
+   :children [[title :level :level4 :label @name]
+              [title :level :level1 :margin-top "0.1em" :label (format-time @timer)]
               [p @phase]
-              (format-time @timer)
+              [p @instructions]
               [button
                :label (if @paused "Start" "Pause")
                :on-click #(re-frame/dispatch-sync [::events/update-db :paused (not @paused)])]]]))
