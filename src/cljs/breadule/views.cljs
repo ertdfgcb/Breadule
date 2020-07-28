@@ -1,54 +1,25 @@
 (ns breadule.views
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [v-box input-text input-textarea label input-time]]
-   [breadule.subs :as subs]))
-
-(defn stage-view [stage]
-  [v-box
-   :children [[label :label (stage :name)]
-              [label :label (stage :waitTime)]
-              [label :label (stage :workTime)]
-              [label :label (stage :instructions)]]])
-
-(defn schedule-view [id]
-  (let [schedule (re-frame/subscribe [::subs/schedule id])]
-    [v-box
-     :children [[label :label (@schedule :name)]
-                [label :label "Stages"]
-                (map stage-view (@schedule :stages))]]))
-
-(defn stage-field-sub [id num name]
-  (re-frame/subscribe [::subs/stage-field id num name]))
-
-(defn stage-form [id num]
-  (let [fieldSub #(stage-field-sub id num %)
-        name (fieldSub :name)
-        waitTime (fieldSub :waitTime)
-        workTime (fieldSub :workTime)
-        instructions (fieldSub :instructions)
-        ]
-    [v-box
-     :children [[label :label "Name"]
-                [input-text
-                 :model name
-                 :on-change print]
-                [label :label "Wait Time"]
-                [input-time
-                 :model waitTime
-                 :on-change print]
-                [label :label "Work Time"]
-                [input-time
-                 :model workTime
-                 :on-change print]
-                [label :label "Instructions"]
-                [input-textarea
-                 :model instructions
-                 :on-change print]]]))
-
+   [re-com.core   :refer [single-dropdown button]]
+   [breadule.subs :as subs]
+   [breadule.events :as events]
+   [breadule.views.schedule :refer [schedule-view]]))
+   
 (defn main-panel []
-  (let [name (re-frame/subscribe [::subs/name])]
+  (let [name (re-frame/subscribe [::subs/name])
+        schedules (re-frame/subscribe [::subs/schedules])
+        currentSchedule (re-frame/subscribe [::subs/currentSchedule])
+        make-choice (fn [[scheduleId schedule]] {:id scheduleId :label (:name schedule)})]
     [:div
      [:h1 @name]
-     (schedule-view :testId)
-     (stage-form :testId 0)]))
+     [single-dropdown
+      :choices (map make-choice (seq @schedules))
+      :model currentSchedule
+      :placeholder "Select schedule"
+      :on-change #(re-frame/dispatch [::events/select-schedule %])]
+     [button
+      :label "Add"
+      :on-click #(re-frame/dispatch [::events/add-schedule (gensym)])]
+     (when (not= @currentSchedule nil)
+       (schedule-view @currentSchedule (get @schedules @currentSchedule)))]))
