@@ -1,0 +1,46 @@
+body {
+  margin: 0 auto;
+  width: 284px;
+}
+
+.dropdown-add-button {
+  margin-left: 5px;
+}
+
+.start-button {
+  margin-top: 10px;
+}
+
+input, textarea {
+  margin-bottom: 5px;
+
+}
+.schedule-edit {
+  margin-top: 18px;
+}
+
+.stage-add-button {
+  align-self: center;
+  margin-left: 5px;
+  margin-top: 4px;
+}
+
+.stage-edit-button {
+  align-self: center;
+  margin-left: 5px;
+}
+
+.subtitle {
+  text-align: center;
+}
+
+.schedule-save-button {
+  align-self: center;
+  margin-left: 10px;
+}
+
+.schedule-edit-button {
+  margin-top: 4px;
+  margin-left: 10px;
+  align-self: center;
+}
