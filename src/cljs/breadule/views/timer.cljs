@@ -3,7 +3,7 @@
    [goog.string :as gstring]
    [goog.string.format]
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [button title v-box p]]
+   [re-com.core   :refer [h-box md-circle-icon-button title v-box p]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [cljs-bach.synthesis :as b]))
@@ -50,9 +50,10 @@
   (when (< stageNum (count stages))
     (let [timer (get (nth stages stageNum) :waitTime)
           callback #(start-work-timer stageNum stages)]
-        (re-frame/dispatch-sync [::events/update-db :phase "Waiting"])
-        (re-frame/dispatch-sync [::events/update-db :timer (* timer 60)])
-        (dec-timer callback))))
+      (re-frame/dispatch-sync [::events/update-db :phase "Waiting"])
+      (re-frame/dispatch-sync [::events/update-db :timer (* timer 60)])
+      (re-frame/dispatch-sync [::events/update-db :currentStage stageNum])
+      (dec-timer callback))))
 
 (defn start-work-timer
   "Returns a function that will start the work timer"
@@ -72,12 +73,15 @@
         name (stageField :name)
         instructions (stageField :instructions)
         timer (re-frame/subscribe [::subs/db-field :timer])]
-  [v-box
-   :children [[title :level :level4 :label @name]
-              [title :level :level1 :margin-top "0.1em" :label (format-time @timer)]
-              [p @phase]
-              [p @instructions]
-              [button
-               :label (if @paused "Start" "Pause")
-               :on-click #(re-frame/dispatch-sync [::events/update-db :paused (not @paused)])]]]))
+    (print currentStage stageField)
+    [v-box
+     :children [[title :level :level3 :label (gstring/format "%s:  %s" @name @phase)]
+                [h-box
+                 :children [[title :level :level1 :margin-top "0.1em" :label (format-time @timer)]
+                            [md-circle-icon-button
+                             :size :larger
+                             :class "timer-pause-button"
+                             :md-icon-name (if @paused "zmdi-play" "zmdi-pause")
+                             :on-click #(re-frame/dispatch-sync [::events/update-db :paused (not @paused)])]]]
+                @instructions]]))
 

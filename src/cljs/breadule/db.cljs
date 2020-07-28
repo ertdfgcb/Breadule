@@ -11,18 +11,68 @@
 (def new-schedule
   {:editing true
    :name ""
-   :notes ""
+   :levain ""
+   :dough ""
    :stages []})
 
 (def testSchedule
   {:editing false
-   :name "Test Schedule"
-   :notes "hardcoded test schedule"
+   :name "Whole Wheat with Rye"
+   :levain "10pm: 200g water, 100g whole wheat, 100g white, 50g starter"
+   :dough "6am (pre autolyse): 850g water, 500g whole wheat, 300g rye, 250g white"
    :stages [{:editing false
-             :name "Turn set 1"
-             :waitTime 1
+             :name "Autolyse"
+             :waitTime 120
              :workTime 005
-             :instructions "Stretch n' fold"
+             :instructions "Mix levain and 25g salt with dough"
+             :notes ""}
+            {:editing false
+             :name "Turn set 1"
+             :waitTime 30
+             :workTime 003
+             :instructions "Stretch and fold 4 times"
+             :notes ""}
+            {:editing false
+             :name "Turn set 2"
+             :waitTime 30
+             :workTime 003
+             :instructions "Stretch and fold 4 times"
+             :notes ""}
+            {:editing false
+             :name "Turn set 3"
+             :waitTime 30
+             :workTime 003
+             :instructions "Stretch and fold 4 times"
+             :notes ""}
+            {:editing false
+             :name "Turn set 4"
+             :waitTime 30
+             :workTime 003
+             :instructions "Stretch and fold 4 times"
+             :notes ""}
+            {:editing false
+             :name "Turn set 5"
+             :waitTime 30
+             :workTime 003
+             :instructions "Stretch and fold 4 times"
+             :notes ""}
+            {:editing false
+             :name "Bulk ferment"
+             :waitTime 120
+             :workTime 5
+             :instructions "Finish rise, then cut and pre-shape dough"
+             :notes ""}
+            {:editing false
+             :name "Shape"
+             :waitTime 20
+             :workTime 003
+             :instructions "Shape into loaves for proofing"
+             :notes ""}
+            {:editing false
+             :name "Proof"
+             :waitTime 120
+             :workTime 003
+             :instructions "Check and add more time as needed"
              :notes ""}]})
 
 (def default-db

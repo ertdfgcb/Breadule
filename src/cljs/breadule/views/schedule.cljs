@@ -1,14 +1,14 @@
 (ns breadule.views.schedule
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [gap h-box input-text title input-textarea button md-icon-button label]]
+   [re-com.core   :refer [h-box input-text title input-textarea md-icon-button]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [breadule.views.stage :refer [stages-edit-view]]
-   [breadule.views.timer :refer [timer-view start-wait-timer]]))
+   [breadule.views.timer :refer [timer-view]]))
 
 (defn labeled [l t]
-  [:div [label :label l] t])
+  [:div [title :level :level3 l] t])
 
 (defn schedule-edit-button [schedule scheduleId]
   (let [update-event [::events/update-schedule scheduleId :editing (not (:editing schedule))]
@@ -23,41 +23,37 @@
 
 (defn schedule-edit-view [schedule scheduleId]
   (let [name (re-frame/subscribe [::subs/schedule-field scheduleId :name])
-        notes (re-frame/subscribe [::subs/schedule-field scheduleId :notes])]
+        levain (re-frame/subscribe [::subs/schedule-field scheduleId :levain])]
     [:div
      (labeled "Name"
               [h-box
                :children [[input-text
                            :class "form-input"
+                           :width "314px"
                            :change-on-blur? false
                            :model name
                            :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :name %])]
                           (schedule-edit-button schedule scheduleId)]])
-     [labeled "Notes"
+     [labeled "Levain"
       [input-textarea
+       :width "314px"
        :change-on-blur? false
-       :model notes
-       :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :notes %])]]]))
+       :model levain
+       :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :levain %])]]]))
 
 (defn schedule-view [scheduleId schedule]
-  (let [running (re-frame/subscribe [::subs/db-field :running])
-        stageNum (re-frame/subscribe [::subs/db-field :currentStage])]
+  (let [running (re-frame/subscribe [::subs/db-field :running])]
     [:div
+     (when @running
+       (timer-view scheduleId))
      (if (:editing schedule)
        (schedule-edit-view schedule scheduleId)
        [:div
         [h-box
          :children [[title :level :level2 :class "subtitle" :label (:name schedule)]
                     (schedule-edit-button schedule scheduleId)]]
-        (:notes schedule)])
-     (when @running
-       (timer-view scheduleId))
-     (stages-edit-view scheduleId schedule)
-     [button
-      :class (if @running "btn-light" "btn-success")
-      :label (if @running "Stop" "Start")
-      :on-click (fn []
-                  (when @running
-                    (re-frame/dispatch-sync [::events/update-db :timer 0]))
-                  (re-frame/dispatch-sync [::events/update-db :running (not @running)])
-                  (start-wait-timer @stageNum (:stages schedule)))]]))
+        [title :level :level3 :label "Levain"]
+        (:levain schedule)
+        [title :level :level3 :label "Dough"]
+        (:dough schedule)])
+     (stages-edit-view scheduleId schedule)]))
