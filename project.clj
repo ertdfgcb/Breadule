@@ -10,7 +10,10 @@
                  [re-com "2.8.0"]
                  [compojure "1.6.1"]
                  [yogthos/config "1.1.7"]
-                 [ring "1.8.1"]]
+                 [ring "1.8.1"]
+                 [ring/ring-defaults "0.3.2"]
+                 [com.novemberain/monger "3.1.0"]
+                 [ring-json-response "0.2.0"]]
 
   :plugins [[lein-shadow "0.2.0"]
             
