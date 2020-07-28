@@ -2,12 +2,37 @@
   (:require
    [re-frame.core :as re-frame]
    [breadule.db]
-   [breadule.util :as util]))
+   [breadule.util :as util]
+   [ajax.core :as ajax]))
 
 (re-frame/reg-event-db
  ::initialize-db
  (fn [_ _]
    breadule.db/default-db))
+
+(re-frame/reg-event-fx
+ ::post-schedule
+ (fn [_ [_ schedule]]
+   {:http-xhrio {:method          :post
+                 :uri             "http://localhost:3000/api/schedules"
+                 :url-params      schedule
+                 :timeout         5000
+                 :format          (ajax/json-request-format)
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success      [::success-post-result]
+                 :on-failure      [::failure-post-result]}}))
+
+(re-frame/reg-event-db
+ ::success-post-result
+ (fn [db res]
+   (print "posted schedules" res)
+   db))
+
+(re-frame/reg-event-db
+ ::failure-post-result
+ (fn [db err]
+   (print "failed to post schedules:" err)
+   db))
 
 (re-frame/reg-event-db
  ::add-stage

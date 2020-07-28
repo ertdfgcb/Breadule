@@ -5,13 +5,26 @@
    [re-frame.core :as re-frame]
    [re-com.core   :refer [button v-box p]]
    [breadule.subs :as subs]
-   [breadule.events :as events]))
+   [breadule.events :as events]
+   [cljs-bach.synthesis :as b]))
 
 (defn format-time [time]
   (let [hours (Math/floor (/ time 3600))
         minutes (mod (Math/floor  (/ time 60)) 60)
         seconds (mod time 60)]
     (gstring/format "%02d:%02d:%02d" hours minutes seconds)))
+
+(defonce audio-context (b/audio-context))
+
+(defn play-alarm [freq]
+  (let [ping (b/connect->
+              (b/square freq)
+              (b/percussive 0.01 0.4)
+              (b/gain 0.1))]
+    (-> (ping freq)
+        (b/connect-> b/destination)
+        (b/run-with audio-context (b/current-time audio-context) 1.0))))
+
 (defn dec-timer
   "Decrement the global timer then do it again in a second, or callback if it's 0"
   [callback]
@@ -44,11 +57,12 @@
 (defn start-work-timer
   "Returns a function that will start the work timer"
   [stageNum stages]
+  (js/alert "Wait's over, do some work!")
   (let [timer (get (nth stages stageNum) :workTime)
         callback #(start-wait-timer (+ stageNum 1) stages)]
-      (re-frame/dispatch-sync [::events/update-db :phase "Working"])
-      (re-frame/dispatch-sync [::events/update-db :timer (* timer 60)])
-      (dec-timer callback)))
+    (re-frame/dispatch-sync [::events/update-db :phase "Working"])
+    (re-frame/dispatch-sync [::events/update-db :timer (* timer 60)])
+    (dec-timer callback)))
 
 (defn timer-view [scheduleId]
   (let [currentStage (re-frame/subscribe [::subs/db-field :currentStage])

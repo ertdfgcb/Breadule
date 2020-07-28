@@ -7,7 +7,15 @@
                  [thheller/shadow-cljs "2.10.17"]
                  [reagent "0.10.0"]
                  [re-frame "1.0.0"]
-                 [re-com "2.8.0"]]
+                 [re-com "2.8.0"]
+                 [compojure "1.6.1"]
+                 [yogthos/config "1.1.7"]
+                 [ring "1.8.1"]
+                 [ring/ring-defaults "0.3.2"]
+                 [com.novemberain/monger "3.1.0"]
+                 [ring-json-response "0.2.0"]
+                 [cljs-bach "0.3.0"]
+                 [day8.re-frame/http-fx "0.2.1"]]
 
   :plugins [[lein-shadow "0.2.0"]
             
@@ -34,6 +42,7 @@
 
                                :devtools {:http-root "resources/public"
                                           :http-port 8280
+                                          :http-handler breadule.handler/dev-handler
                                           }}}}
 
   :aliases {"dev"          ["with-profile" "dev" "do"
@@ -54,6 +63,11 @@
 
    :prod {}
    
-}
+   :uberjar {:source-paths ["env/prod/clj"]
+             :omit-source  true
+             :main         breadule.server
+             :aot          [breadule.server]
+             :uberjar-name "breadule.jar"
+             :prep-tasks   ["compile" ["prod"]]}}
 
   :prep-tasks [])

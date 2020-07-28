@@ -43,7 +43,6 @@
         edit-toggle #(re-frame/dispatch
                       [::events/update-stage scheduleId num :editing (not @editing)])
         row (fn [l t] [:tr [:td l] [:td t]])]
-    ^{:key (gensym)}
     [:div
      (if @editing
        (stage-form scheduleId num)
