@@ -1,7 +1,7 @@
 (ns breadule.views.schedule
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [gap v-box h-box input-text title input-textarea button md-icon-button label]]
+   [re-com.core   :refer [gap h-box input-text title input-textarea button md-icon-button label]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [breadule.views.stage :refer [stages-edit-view]]
@@ -37,8 +37,7 @@
       [input-textarea
        :change-on-blur? false
        :model notes
-       :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :notes %])]]
-     ]))
+       :on-change #(re-frame/dispatch [::events/update-schedule scheduleId :notes %])]]]))
 
 (defn schedule-view [scheduleId schedule]
   (let [running (re-frame/subscribe [::subs/db-field :running])
@@ -55,7 +54,7 @@
        (timer-view scheduleId))
      (stages-edit-view scheduleId schedule)
      [button
-      :class "btn-lg btn-success start-button"
+      :class (if @running "btn-light" "btn-success")
       :label (if @running "Stop" "Start")
       :on-click (fn []
                   (when @running

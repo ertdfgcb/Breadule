@@ -74,6 +74,7 @@
 
 (defn stages-edit-view [scheduleId schedule]
   [:div
+   {:class "stages-edit-view"}
    [h-box
     :children [[title :level :level3 :label "Stages"]
                [md-icon-button
