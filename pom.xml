@@ -7,9 +7,7 @@
   <version>0.1.0-SNAPSHOT</version>
   <name>breadule</name>
   <description/>
-  <scm>
-    <tag>1262d79dbf2a8210f2d89aa349db0db2c05ed502</tag>
-  </scm>
+  <scm/>
   <build>
     <sourceDirectory>src/clj</sourceDirectory>
     <testSourceDirectory>test</testSourceDirectory>
@@ -116,6 +114,21 @@
       <groupId>re-com</groupId>
       <artifactId>re-com</artifactId>
       <version>2.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>compojure</groupId>
+      <artifactId>compojure</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>yogthos</groupId>
+      <artifactId>config</artifactId>
+      <version>1.1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>ring</groupId>
+      <artifactId>ring</artifactId>
+      <version>1.8.1</version>
     </dependency>
     <dependency>
       <groupId>binaryage</groupId>
