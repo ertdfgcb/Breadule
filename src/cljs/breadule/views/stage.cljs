@@ -9,7 +9,7 @@
   (re-frame/subscribe [::subs/stage-field id num name]))
 
 (defn labeled [l t]
-  [:div [label :label l] t])
+  [:div [title :level :level3 :label l] t])
 
 (defn stage-edit-buttons [scheduleId num editing]
   (let [edit-start #(re-frame/dispatch
@@ -37,49 +37,56 @@
                          [h-box
                           :children
                           (concat [[input-text
+                                    :width "320px"
                                     :change-on-blur? false
                                     :model name
                                     :on-change #(fieldUpdate :name %)]]
                                   (stage-edit-buttons scheduleId num true))])
                 (labeled "Wait Time"
                          [input-time
+                          :width "320px"
                           :model waitTime
                           :on-change #(fieldUpdate :waitTime %)])
                 (labeled "Work Time"
                          [input-time
+                          :width "320px"
                           :model workTime
                           :on-change #(fieldUpdate :workTime %)])
                 (labeled "Instructions"
                          [input-textarea
+                          :width "320px"
                           :model instructions
                           :change-on-blur? false
                           :on-change #(fieldUpdate :instructions %)])]]))
 
 (defn stage-title [scheduleId stage num]
+  (let [currentStage (re-frame/subscribe [::subs/db-field :currentStage])
+        running (re-frame/subscribe [::subs/db-field :running])
+        class (if (and @running (= @currentStage num)) "highlighted-title" "")]
   [h-box
-   :children (concat [[title :level :level4 :label (:name stage)]]
-                     (stage-edit-buttons scheduleId num false))])
+   :children (concat [[title :class class :level :level3 :label (:name stage)]]
+                     (stage-edit-buttons scheduleId num false))]))
 
 (defn stage-view [scheduleId num stage]
-  (let [editing (stage-field-sub scheduleId num :editing)]
+  (let [editing (stage-field-sub scheduleId num :editing)
+        ]
     ^{:key num}
     [:div
      (if @editing
        (stage-form scheduleId num)
        [v-box
         :children [(stage-title scheduleId stage num)
-                   [:div (:instructions stage)]
-                   [:div "Wait " (:waitTime stage) " minutes, then work " (:workTime stage) " minutes."]]])
-     [:div]]))
+                   [:div "Wait " (:waitTime stage) " minutes, then work " (:workTime stage) " minutes."]
+                   [:div (:instructions stage)]]])
+     [:hr]]))
 
 (defn stages-edit-view [scheduleId schedule]
   [:div
    {:class "stages-edit-view"}
    [h-box
-    :children [[title :level :level3 :label "Stages"]
+    :children [[title :level :level2 :label "Stages"]
                [md-icon-button
                 :class "stage-add-button"
-                :size :smaller
                 :md-icon-name "zmdi-plus"
                 :on-click #(re-frame/dispatch
                             [::events/add-stage scheduleId])]]]

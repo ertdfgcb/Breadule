@@ -1,6 +1,6 @@
 body {
   margin: 0 auto;
-  width: 284px;
+  width: 350px;
 }
 
 .dropdown-add-button {
@@ -13,8 +13,22 @@ body {
 
 input, textarea {
   margin-bottom: 5px;
-
 }
+
+.highlighted-title {
+  text-decoration: underline;
+}
+
+.schedule-start-button {
+  align-self: center;
+  margin-top: 4px;
+}
+
+.timer-pause-button {
+  margin-top: -6px;
+  margin-left: 15px;
+}
+
 .schedule-edit {
   margin-top: 18px;
 }
@@ -22,7 +36,7 @@ input, textarea {
 .stage-add-button {
   align-self: center;
   margin-left: 5px;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .stage-edit-button {
@@ -41,6 +55,6 @@ input, textarea {
 
 .schedule-edit-button {
   margin-top: 4px;
-  margin-left: 10px;
+  margin-left: 5px;
   align-self: center;
 }
