@@ -2,8 +2,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.773"
                   :exclusions [com.google.javascript/closure-compiler-unshaded
-                               org.clojure/google-closure-library
-                               org.clojure/google-closure-library-third-party]]
+                               org.clojure/google-closure-library]]
                  [thheller/shadow-cljs "2.10.17"]
                  [reagent "0.10.0"]
                  [re-frame "1.0.0"]
@@ -13,9 +12,9 @@
                  [ring "1.8.1"]
                  [ring/ring-defaults "0.3.2"]
                  [com.novemberain/monger "3.1.0"]
-                 [ring-json-response "0.2.0"]
                  [cljs-bach "0.3.0"]
-                 [day8.re-frame/http-fx "0.2.1"]]
+                 [day8.re-frame/http-fx "0.2.1"]
+                 [ring/ring-json "0.5.0"]]
 
   :plugins [[lein-shadow "0.2.0"]
             
