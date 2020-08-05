@@ -14,7 +14,7 @@
  ::post-schedule
  (fn [_ [_ schedule]]
    {:http-xhrio {:method          :post
-                 :uri             "http://localhost:3000/api/schedules"
+                 :uri             "/api/schedules"
                  :url-params      schedule
                  :timeout         5000
                  :format          (ajax/json-request-format)

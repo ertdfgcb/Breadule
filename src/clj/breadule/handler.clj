@@ -10,12 +10,19 @@
    [breadule.mongo :refer [insert-schedule get-all-schedules]]))
 
 (defroutes routes
-  (GET "/" [] (resource-response "index.html" {:root "public"}))
+  (GET "/" [] (resource-response "index.html" {:root "public"} "text/html")
   (GET "/api/schedules" [] (json-response (get-all-schedules) {:pretty false}))
   (POST "/api/schedules" req (let [res (:params req)]
                                (insert-schedule res)))
-  (resources "/"))
+  (resources "/")))
 
-(def dev-handler (-> #'routes wrap-reload push-state/handle))
+(defn wrap-dir-index [handler]
+  (fn [req]
+    (print "here")
+    (handler
+     (update-in req [:uri]
+                #(if (= "/" %) "/index.html" %)))))
 
-(def handler (wrap-defaults routes (assoc site-defaults :security false)))
+(def dev-handler (-> #'routes wrap-reload push-state/handle wrap-dir-index))
+
+(def handler (wrap-dir-index (wrap-defaults (wrap-dir-index routes) (assoc site-defaults :security false))))

@@ -3,7 +3,7 @@
    [goog.string :as gstring]
    [goog.string.format]
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [h-box md-circle-icon-button title v-box p]]
+   [re-com.core   :refer [h-box md-circle-icon-button title v-box]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [cljs-bach.synthesis :as b]))
