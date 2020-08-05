@@ -1,7 +1,7 @@
 (ns breadule.views.schedule
   (:require
    [re-frame.core :as re-frame]
-   [re-com.core   :refer [h-box input-text title input-textarea md-icon-button]]
+   [re-com.core :refer [h-box input-text title input-textarea md-icon-button]]
    [breadule.subs :as subs]
    [breadule.events :as events]
    [breadule.views.stage :refer [stages-edit-view]]
