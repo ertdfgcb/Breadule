@@ -13,7 +13,7 @@
 (re-frame/reg-event-fx
  ::post-schedule
  (fn [_ [_ schedule]]
-   {:http-xhrio {:method          :post
+   {:http-xhrio {:method        :post
                  :uri             "/api/schedules"
                  :url-params      schedule
                  :timeout         5000

@@ -80,6 +80,7 @@
  :running false
  :paused false
  :timer 0
+ :startTimestamp nil
  :currentStage 0
  :phase ""
  :currentSchedule nil

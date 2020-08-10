@@ -20,6 +20,11 @@
 
 (re-frame/reg-sub
  ::currentSchedule
+ (fn [db _]
+   (get (:schedules db) (:currentSchedule db))))
+
+(re-frame/reg-sub
+ ::currentScheduleId
  (fn [db]
    (:currentSchedule db)))
 

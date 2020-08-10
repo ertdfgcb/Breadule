@@ -17,7 +17,7 @@
                  [ring/ring-json "0.5.0"]]
 
   :plugins [[lein-shadow "0.2.0"]
-            
+            [lein-cljfmt "0.6.8"]
             [lein-shell "0.5.0"]]
 
   :min-lein-version "2.9.0"

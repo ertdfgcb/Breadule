@@ -7,23 +7,25 @@
    [breadule.subs :as subs]
    [breadule.events :as events]
    [cljs-bach.synthesis :as b]))
+;; (defonce audio-context (b/audio-context))
 
-(defn format-time [time]
+;; (defn play-alarm [freq]
+;;   (let [ping (b/connect->
+;;               (b/square freq)
+;;               (b/percussive 0.01 0.4)
+;;               (b/gain 0.1))]
+;;     (-> (ping freq)
+;;         (b/connect-> b/destination)
+;;         (b/run-with audio-context (b/current-time audio-context) 1.0))))
+
+(defn format-time
+  "take an amount of time (not a timestamp) and format it as HH:MM:SS"
+  [time]
   (let [hours (Math/floor (/ time 3600))
         minutes (mod (Math/floor  (/ time 60)) 60)
         seconds (mod time 60)]
     (gstring/format "%02d:%02d:%02d" hours minutes seconds)))
 
-(defonce audio-context (b/audio-context))
-
-(defn play-alarm [freq]
-  (let [ping (b/connect->
-              (b/square freq)
-              (b/percussive 0.01 0.4)
-              (b/gain 0.1))]
-    (-> (ping freq)
-        (b/connect-> b/destination)
-        (b/run-with audio-context (b/current-time audio-context) 1.0))))
 
 (defn dec-timer
   "Decrement the global timer then do it again in a second, or callback if it's 0"
@@ -64,6 +66,13 @@
     (re-frame/dispatch-sync [::events/update-db :phase "Working"])
     (re-frame/dispatch-sync [::events/update-db :timer (* timer 60)])
     (dec-timer callback)))
+
+(defn init-timer
+  "if we have a timestamp, set the timer, else set timestamp, stage timestamps, and start timer"
+  []
+  (let [timestamp (re-frame/subscribe [::subs/db-field :startTimestamp])]
+    (when (not= nil timestamp)
+      (println "set stage timestamps"))))
 
 (defn timer-view [scheduleId]
   (let [currentStage (re-frame/subscribe [::subs/db-field :currentStage])
